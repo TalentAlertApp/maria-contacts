@@ -1,0 +1,5 @@
+[build]
+  command = "npm run build"
+  publish = "out"
+
+# Optional caching & settings can go here
