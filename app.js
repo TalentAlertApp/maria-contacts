@@ -690,94 +690,159 @@ class ContactsManager {
             console.warn('Table body not found');
             return;
         }
-        
+
         tbody.innerHTML = '';
-        
-        // Calculate pagination for table view
+
         const startIndex = (this.tableCurrentPage - 1) * this.tableRecordsPerPage;
         const endIndex = startIndex + this.tableRecordsPerPage;
         const pageContacts = this.filteredContacts.slice(startIndex, endIndex);
-        
-        // Render only the contacts for the current page
+
         pageContacts.forEach(contact => {
             const row = document.createElement('tr');
-            row.innerHTML = `
-                <td class="contact-id">${contact.id}</td>
-                <td>
-                    ${contact.linkedin ? `<a href="${contact.linkedin}" target="_blank" class="linkedin-icon" title="Open LinkedIn Profile">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                        </svg>
-                    </a>` : '<span class="no-linkedin">—</span>'}
-                </td>
-                <td>
-                    <div class="contact-name clickable" onclick="contactsManager.viewContact(${contact.id})" title="Click to view contact details">
-                        ${contact.favorite ? '★ ' : ''}${this.escapeHtml(contact.name || '')}
-                    </div>
-                </td>
-                <td>${this.truncateText(this.escapeHtml(contact.company || ''), 30)}</td>
-                <td>${this.truncateText(this.escapeHtml(contact.position || ''), 25)}</td>
-                <td>${this.truncateText(this.escapeHtml(contact.industry || ''), 25) || '—'}</td>
-                <td>${this.truncateText(this.escapeHtml(contact.location || ''), 20) || '—'}</td>
-                <td>
-                    <div class="priority-bars" data-contact-id="${contact.id}" data-field="priority" data-original-value="${contact.priority || ''}" title="Click to set priority">
-                        <div class="priority-bar priority-bar--high ${contact.priority === 'High Priority' ? 'active' : ''}" data-value="High Priority" title="High Priority"></div>
-                        <div class="priority-bar priority-bar--medium ${contact.priority === 'Medium Priority' ? 'active' : ''}" data-value="Medium Priority" title="Medium Priority"></div>
-                        <div class="priority-bar priority-bar--low ${contact.priority === 'Low Priority' ? 'active' : ''}" data-value="Low Priority" title="Low Priority"></div>
-                    </div>
-                </td>
-                <td>
-                    <select class="inline-edit status-edit" data-field="status" data-contact-id="${contact.id}" data-original-value="${contact.status || ''}">
-                        <option value="">No Status</option>
-                        <option value="Contact ASAP" ${contact.status === 'Contact ASAP' ? 'selected' : ''}>Contact ASAP</option>
-                        <option value="Contact" ${contact.status === 'Contact' ? 'selected' : ''}>Contact</option>
-                        <option value="Contacted/Answered" ${contact.status === 'Contacted/Answered' ? 'selected' : ''}>Contacted/Answered</option>
-                        <option value="Contacted/No Answer" ${contact.status === 'Contacted/No Answer' ? 'selected' : ''}>Contacted/No Answer</option>
-                        <option value="Contacted/My Turn" ${contact.status === 'Contacted/My Turn' ? 'selected' : ''}>Contacted/My Turn</option>
-                    </select>
-                </td>
-                <td>
-                    <select class="inline-edit relationship-edit" data-field="relationship" data-contact-id="${contact.id}" data-original-value="${contact.relationship || ''}">
-                        <option value="">No Relationship</option>
-                        <option value="Good friend" ${contact.relationship === 'Good friend' ? 'selected' : ''}>Good friend</option>
-                        <option value="Acquainted" ${contact.relationship === 'Acquainted' ? 'selected' : ''}>Acquainted</option>
-                        <option value="None" ${contact.relationship === 'None' ? 'selected' : ''}>None</option>
-                        <option value="No idea" ${contact.relationship === 'No idea' ? 'selected' : ''}>No idea</option>
-                    </select>
-                </td>
-                <td class="contact-actions">
-                    <button onclick="contactsManager.toggleFavorite(${contact.id})" aria-label="${contact.favorite ? 'Remove from favorites' : 'Add to favorites'}" title="${contact.favorite ? 'Remove from favorites' : 'Add to favorites'}" class="favorite-btn ${contact.favorite ? 'favorite' : ''}">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="${contact.favorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                    </button>
-                    ${contact.email ? `<button onclick="contactsManager.sendEmail('${contact.email}')" aria-label="Send email" title="Send email">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                            <polyline points="22,6 12,13 2,6"></polyline>
-                        </svg>
-                    </button>` : ''}
-                    <button onclick="contactsManager.editContact(${contact.id})" aria-label="Edit contact" title="Edit">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 1 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                            <path d="m18.5 2.5 a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                        </svg>
-                    </button>
-                    <button onclick="contactsManager.deleteContact(${contact.id})" aria-label="Delete contact" title="Delete">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="3,6 5,6 21,6"></polyline>
-                            <path d="m19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2,2V6"></path>
-                        </svg>
-                    </button>
-                </td>
+
+            // ID
+            const idCell = document.createElement('td');
+            idCell.className = 'contact-id';
+            idCell.textContent = contact.id;
+            row.appendChild(idCell);
+
+            // LinkedIn
+            const linkedinCell = document.createElement('td');
+            if (contact.linkedin) {
+                const link = document.createElement('a');
+                link.href = contact.linkedin;
+                link.target = '_blank';
+                link.className = 'linkedin-icon';
+                link.title = 'Open LinkedIn Profile';
+                link.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`;
+                linkedinCell.appendChild(link);
+            } else {
+                const noLink = document.createElement('span');
+                noLink.className = 'no-linkedin';
+                noLink.textContent = '—';
+                linkedinCell.appendChild(noLink);
+            }
+            row.appendChild(linkedinCell);
+
+            // Name
+            const nameCell = document.createElement('td');
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'contact-name clickable';
+            nameDiv.onclick = () => this.viewContact(contact.id);
+            nameDiv.title = 'Click to view contact details';
+            nameDiv.textContent = `${contact.favorite ? '★ ' : ''}${this.escapeHtml(contact.name || '')}`;
+            nameCell.appendChild(nameDiv);
+            row.appendChild(nameCell);
+
+            // Company
+            const companyCell = document.createElement('td');
+            companyCell.textContent = this.escapeHtml(contact.company || '');
+            row.appendChild(companyCell);
+
+            // Position
+            const positionCell = document.createElement('td');
+            positionCell.textContent = this.escapeHtml(contact.position || '');
+            row.appendChild(positionCell);
+
+            // Industry
+            const industryCell = document.createElement('td');
+            industryCell.textContent = this.escapeHtml(contact.industry || '') || '—';
+            row.appendChild(industryCell);
+
+            // Location
+            const locationCell = document.createElement('td');
+            locationCell.textContent = this.escapeHtml(contact.location || '') || '—';
+            row.appendChild(locationCell);
+
+            // Priority
+            const priorityCell = document.createElement('td');
+            const priorityDiv = document.createElement('div');
+            priorityDiv.className = 'priority-bars';
+            priorityDiv.dataset.contactId = contact.id;
+            priorityDiv.dataset.field = 'priority';
+            priorityDiv.dataset.originalValue = contact.priority || '';
+            priorityDiv.title = 'Click to set priority';
+            priorityDiv.innerHTML = `
+                <div class="priority-bar priority-bar--high ${contact.priority === 'High Priority' ? 'active' : ''}" data-value="High Priority" title="High Priority"></div>
+                <div class="priority-bar priority-bar--medium ${contact.priority === 'Medium Priority' ? 'active' : ''}" data-value="Medium Priority" title="Medium Priority"></div>
+                <div class="priority-bar priority-bar--low ${contact.priority === 'Low Priority' ? 'active' : ''}" data-value="Low Priority" title="Low Priority"></div>
             `;
+            priorityCell.appendChild(priorityDiv);
+            row.appendChild(priorityCell);
+
+            // Status
+            const statusCell = document.createElement('td');
+            const statusSelect = document.createElement('select');
+            statusSelect.className = 'inline-edit status-edit';
+            statusSelect.dataset.field = 'status';
+            statusSelect.dataset.contactId = contact.id;
+            statusSelect.dataset.originalValue = contact.status || '';
+            statusSelect.innerHTML = `
+                <option value="">No Status</option>
+                <option value="Contact ASAP" ${contact.status === 'Contact ASAP' ? 'selected' : ''}>Contact ASAP</option>
+                <option value="Contact" ${contact.status === 'Contact' ? 'selected' : ''}>Contact</option>
+                <option value="Contacted/Answered" ${contact.status === 'Contacted/Answered' ? 'selected' : ''}>Contacted/Answered</option>
+                <option value="Contacted/No Answer" ${contact.status === 'Contacted/No Answer' ? 'selected' : ''}>Contacted/No Answer</option>
+                <option value="Contacted/My Turn" ${contact.status === 'Contacted/My Turn' ? 'selected' : ''}>Contacted/My Turn</option>
+            `;
+            statusCell.appendChild(statusSelect);
+            row.appendChild(statusCell);
+
+            // Relationship
+            const relationshipCell = document.createElement('td');
+            const relationshipSelect = document.createElement('select');
+            relationshipSelect.className = 'inline-edit relationship-edit';
+            relationshipSelect.dataset.field = 'relationship';
+            relationshipSelect.dataset.contactId = contact.id;
+            relationshipSelect.dataset.originalValue = contact.relationship || '';
+            relationshipSelect.innerHTML = `
+                <option value="">No Relationship</option>
+                <option value="Good friend" ${contact.relationship === 'Good friend' ? 'selected' : ''}>Good friend</option>
+                <option value="Acquainted" ${contact.relationship === 'Acquainted' ? 'selected' : ''}>Acquainted</option>
+                <option value="None" ${contact.relationship === 'None' ? 'selected' : ''}>None</option>
+                <option value="No idea" ${contact.relationship === 'No idea' ? 'selected' : ''}>No idea</option>
+            `;
+            relationshipCell.appendChild(relationshipSelect);
+            row.appendChild(relationshipCell);
+
+            // Actions
+            const actionsCell = document.createElement('td');
+            actionsCell.className = 'contact-actions';
+
+            const favoriteBtn = document.createElement('button');
+            favoriteBtn.onclick = () => this.toggleFavorite(contact.id);
+            favoriteBtn.title = contact.favorite ? 'Remove from favorites' : 'Add to favorites';
+            favoriteBtn.className = `favorite-btn ${contact.favorite ? 'favorite' : ''}`;
+            favoriteBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="${contact.favorite ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+            actionsCell.appendChild(favoriteBtn);
+
+            if (contact.email) {
+                const emailBtn = document.createElement('button');
+                emailBtn.onclick = () => this.sendEmail(contact.email);
+                emailBtn.title = 'Send email';
+                emailBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`;
+                actionsCell.appendChild(emailBtn);
+            }
+
+            const editBtn = document.createElement('button');
+            editBtn.onclick = () => this.editContact(contact.id);
+            editBtn.title = 'Edit';
+            editBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 1 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="m18.5 2.5 a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`;
+            actionsCell.appendChild(editBtn);
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.onclick = () => this.deleteContact(contact.id);
+            deleteBtn.title = 'Delete';
+            deleteBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"></polyline><path d="m19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2,2V6"></path></svg>`;
+            actionsCell.appendChild(deleteBtn);
+
+            row.appendChild(actionsCell);
+
             tbody.appendChild(row);
         });
-        
-        // Update table pagination
+
         this.updateTablePagination();
-        
-        // Show/hide table pagination based on number of contacts
+
         if (this.filteredContacts.length > this.tableRecordsPerPage) {
             this.showTablePagination();
         } else {

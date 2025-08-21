@@ -1144,11 +1144,17 @@ select.form-control {
 }
 
 .contacts-table td:nth-child(1) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 32px; /* Fixed height to match new cell height */
   max-height: 32px; /* Maximum height constraint */
 }
 
 .contacts-table td:nth-child(2) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 32px; /* Fixed height to match new cell height */
   max-height: 32px; /* Maximum height constraint */
 }
@@ -1468,6 +1474,7 @@ select.form-control {
   text-overflow: ellipsis;
   white-space: nowrap;
   height: 32px !important; /* Force fixed height to match new cell height */
+  display: flex;
   align-items: center;
   line-height: 1.2; /* Better line height for text alignment */
   max-height: 32px !important; /* Force maximum height constraint */
@@ -1480,6 +1487,7 @@ select.form-control {
   color: var(--color-text-secondary);
   text-align: center;
   font-weight: var(--font-weight-medium);
+  display: flex;
   align-items: center;
   justify-content: center;
   height: 32px; /* Match cell height */
@@ -1519,6 +1527,7 @@ select.form-control {
 }
 
 .contacts-table .contact-actions {
+  display: flex;
   gap: var(--space-1); /* Further reduced gap to fit all buttons on one line */
   justify-content: center; /* Center the action buttons */
   align-items: center; /* Ensure buttons are vertically centered */
