@@ -1127,7 +1127,7 @@ select.form-control {
 
 .contacts-table th:nth-child(1), /* ID */
 .contacts-table td:nth-child(1) {
-  width: 4%; /* Slightly reduced to compensate for LinkedIn */
+  width: 3%;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1136,7 +1136,7 @@ select.form-control {
 
 .contacts-table th:nth-child(2), /* LinkedIn */
 .contacts-table td:nth-child(2) {
-  width: 7%; /* Increased width for better LinkedIn icon display */
+  width: 3%;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1144,17 +1144,11 @@ select.form-control {
 }
 
 .contacts-table td:nth-child(1) {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   height: 32px; /* Fixed height to match new cell height */
   max-height: 32px; /* Maximum height constraint */
 }
 
 .contacts-table td:nth-child(2) {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   height: 32px; /* Fixed height to match new cell height */
   max-height: 32px; /* Maximum height constraint */
 }
@@ -1334,7 +1328,7 @@ select.form-control {
 
 .contacts-table th:nth-child(3), /* Name */
 .contacts-table td:nth-child(3) {
-  width: 22%; /* Further increased width for Name */
+  width: 25%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1342,7 +1336,7 @@ select.form-control {
 
 .contacts-table th:nth-child(4), /* Company */
 .contacts-table td:nth-child(4) {
-  width: 13%; /* Slightly reduced to compensate for Name */
+  width: 12%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1350,7 +1344,7 @@ select.form-control {
 
 .contacts-table th:nth-child(5), /* Position */
 .contacts-table td:nth-child(5) {
-  width: 13%; /* Slightly reduced to compensate for Name */
+  width: 12%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1358,7 +1352,7 @@ select.form-control {
 
 .contacts-table th:nth-child(6), /* Industry */
 .contacts-table td:nth-child(6) {
-  width: 10%; /* Increased width for better text display */
+  width: 8%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1367,7 +1361,7 @@ select.form-control {
 
 .contacts-table th:nth-child(7), /* Location */
 .contacts-table td:nth-child(7) {
-  width: 10%; /* Increased width for better text display */
+  width: 8%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1384,7 +1378,7 @@ select.form-control {
 
 .contacts-table th:nth-child(8), /* Priority */
 .contacts-table td:nth-child(8) {
-  width: 8%;
+  width: 6%;
   text-align: center; /* Center content to match header */
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1393,7 +1387,7 @@ select.form-control {
 
 .contacts-table th:nth-child(9), /* Status */
 .contacts-table td:nth-child(9) {
-  width: 8%; /* Further reduced to compensate for Industry and Location */
+  width: 8%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1401,7 +1395,7 @@ select.form-control {
 
 .contacts-table th:nth-child(10), /* Relationship */
 .contacts-table td:nth-child(10) {
-  width: 8%; /* Further reduced to compensate for Industry and Location */
+  width: 5%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1409,9 +1403,9 @@ select.form-control {
 
 .contacts-table th:nth-child(11), /* Actions */
 .contacts-table td:nth-child(11) {
-  width: 22%; /* Further increased width to fit all action buttons on one line */
+  width: 10%;
   text-align: center;
-  overflow: hidden;
+  overflow: visible;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

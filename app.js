@@ -712,7 +712,7 @@ class ContactsManager {
                 </td>
                 <td>
                     <div class="contact-name clickable" onclick="contactsManager.viewContact(${contact.id})" title="Click to view contact details">
-                        ${contact.favorite ? '★ ' : ''}${this.truncateText(this.escapeHtml(contact.name || ''), 25)}
+                        ${contact.favorite ? '★ ' : ''}${this.escapeHtml(contact.name || '')}
                     </div>
                 </td>
                 <td>${this.truncateText(this.escapeHtml(contact.company || ''), 30)}</td>
